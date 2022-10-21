@@ -1,6 +1,6 @@
-package GamePack;
+ package GamePack;
 
-// import IndexPack.*; // TODO: UNCOMMENT THIS LATER
+import IndexPack.*; // TODO: UNCOMMENT THIS LATER
 import IndexPack.*;
 import java.awt.Color;
 import java.awt.Font;
@@ -35,7 +35,7 @@ public class PlayGame implements ActionListener{
 
     JButton[] buttonList = new JButton[4];
     JLabel[] moneyLevel = new JLabel[12];
-    JButton choosedBtn;
+    JButton choosedBtn, currentBtn;
 
     Timer timer;
 
@@ -101,7 +101,7 @@ public class PlayGame implements ActionListener{
 
 
     int i, questionCount = 0, winPoint, questionPoint, submitted=0;
-    int questionIndex = 0, gameLevel = 0, swapFlag = 0, doubleFlag = 0;
+    int questionIndex = 0, gameLevel = 0, swapFlag = 0, swapFlagUsed = 0, doubleFlag = 0, fiftyFiftyFlagUsed = 0, doubleFlagUsed = 0;
     int wrongAnswerFlag = 0, quitFlag = 0;
     String correctAnswer;
 
@@ -170,7 +170,7 @@ public class PlayGame implements ActionListener{
         // l2.setBounds(0, 460, 300, 20);
         l2.setForeground(Color.WHITE);
 
-        l3 = new JLabel("$10,000");
+        l3 = new JLabel("$5,000");
         l3.setFont(new Font("Times New Roman", Font.BOLD, 25));
         // l3.setBounds(0, 420, 300, 20);
         l3.setForeground(Color.WHITE);
@@ -180,37 +180,37 @@ public class PlayGame implements ActionListener{
         // l4.setBounds(0, 380, 300, 20);
         l4.setForeground(Color.WHITE);
 
-        l5 = new JLabel("$16,000");
+        l5 = new JLabel("$15,000");
         l5.setFont(new Font("Times New Roman", Font.BOLD, 25));
         // l5.setBounds(0, 340, 300, 20);
         l5.setForeground(Color.WHITE);
 
-        l6 = new JLabel("$32,000");
+        l6 = new JLabel("$30,000");
         l6.setFont(new Font("Times New Roman", Font.BOLD, 25));
         // l6.setBounds(0, 300, 300, 20);
         l6.setForeground(Color.WHITE);
 
-        l7 = new JLabel("$320,000");
+        l7 = new JLabel("$60,000");
         l7.setFont(new Font("Times New Roman", Font.BOLD, 25));
         // l7.setBounds(0, 260, 300, 20);
         l7.setForeground(Color.WHITE);
 
-        l8 = new JLabel("$128,000");
+        l8 = new JLabel("$120,000");
         l8.setFont(new Font("Times New Roman", Font.BOLD, 25));
         // l8.setBounds(0, 220, 300, 20);
         l8.setForeground(Color.WHITE);
 
-        l9 = new JLabel("$256,000");
+        l9 = new JLabel("$250,000");
         l9.setFont(new Font("Times New Roman", Font.BOLD, 25));
         // l9.setBounds(0, 180, 300, 20);
         l9.setForeground(Color.WHITE);
 
-        l10 = new JLabel("$512,000");
+        l10 = new JLabel("$500,000");
         l10.setFont(new Font("Times New Roman", Font.BOLD, 25));
         // l10.setBounds(0, 140, 300, 20);
         l10.setForeground(Color.WHITE);
 
-        l11 = new JLabel("$10,24,000");
+        l11 = new JLabel("$1,000,000");
         l11.setFont(new Font("Times New Roman", Font.BOLD, 25));
         // l11.setAlignmentX(CENTER_ALIGNMENT);
         // l11.setBounds(20, 100, 300, 20);
@@ -569,9 +569,219 @@ void startTimer(int timeLimit){
   
 // }
 
+    public void optionButtonClicked(){
+        choosedBtn = currentBtn;
+
+        // System.out.println(option1.getBackground());
+        if(option1.getBackground() != Color.red){
+            option1.setBackground(Color.WHITE);
+            // option1.setForeground(Color.decode("#000000"));
+        }
+        if(option2.getBackground() != Color.red){
+            option2.setBackground(Color.WHITE);
+            // option2.setForeground(Color.decode("#000000"));
+        }
+        if(option3.getBackground() != Color.red){
+            option3.setBackground(Color.WHITE);
+            // option3.setForeground(Color.decode("#000000"));
+        }
+        if(option4.getBackground() != Color.red){
+            option4.setBackground(Color.WHITE);
+            // option4.setForeground(Color.decode("#000000"));
+        }
+
+        option1.setEnabled(true);
+        option2.setEnabled(true);
+        option3.setEnabled(true);
+        option4.setEnabled(true);
+
+        lockBtn.setEnabled(true);
+
+
+        if(option1.getBackground() == Color.red){
+            option1.setEnabled(false);
+            // option1.setForeground(Color.decode("#000000"));
+        }
+        if(option2.getBackground() == Color.red){
+            option1.setEnabled(false);
+            // option2.setForeground(Color.decode("#000000"));
+        }
+        if(option3.getBackground() == Color.red){
+            option1.setEnabled(false);
+            // option3.setForeground(Color.decode("#000000"));
+        }
+        if(option4.getBackground() == Color.red){
+            option1.setEnabled(false);
+            // option4.setForeground(Color.decode("#000000"));
+        }
+        
+        // option2.setBackground(Color.WHITE);
+        // option3.setBackground(Color.WHITE);
+        // option4.setBackground(Color.WHITE);
+
+
+        choosedBtn.setBackground(Color.GRAY);
+        // choosedBtn.setForeground(Color.decode("#FDF6EC"));
+        choosedBtn.setEnabled(false);
+
+        // lockLbl.setVisible(false);
+        lockBtn.setVisible(true);
+    }
+
+    public void lockButtonClicked(){
+        disableLifeLines();
+        choosedBtn.setEnabled(false);
+
+        if(doubleFlag == 0){
+            submitted = 1;
+            currentBtn.setVisible(false);
+            nextQuestionBtn.setVisible(true);
+            timer.cancel();
+
+            option1.setEnabled(false);
+            option2.setEnabled(false);
+            option3.setEnabled(false);
+            option4.setEnabled(false);
+        }
+
+        if(choosedBtn.getText() == correctAnswer){
+            doubleFlag = 0;
+            choosedBtn.setBackground(Color.GREEN);
+            moneyLevel[questionCount - 1].setBackground(Color.decode("#FFF323"));
+            moneyLevel[questionCount - 1].setForeground(Color.decode("#000000"));
+            quitBtn.setEnabled(true);
+            currentBtn.setVisible(false);
+            nextQuestionBtn.setVisible(true);
+            timer.cancel();
+            option1.setEnabled(false);
+            option2.setEnabled(false);
+            option3.setEnabled(false);
+            option4.setEnabled(false);
+
+
+            if(questionCount == 12){
+                gameOver();
+            }
+        }else{
+            choosedBtn.setBackground(Color.RED);
+            choosedBtn.setEnabled(false);
+
+            // choosing the button with correct answer
+            if(doubleFlag == 0){
+
+                for(int i = 0; i < 4; i++){
+                    if(buttonList[i].getText() == correctAnswer){
+                        buttonList[i].setBackground(Color.GREEN);
+                    }
+                }
+                wrongAnswerFlag = 1;
+                gameOver();
+            }else{
+                // doubleFlag = 0;
+                nextQuestionBtn.setVisible(false);
+                playAgainBtn.setVisible(false);
+                lockBtn.setVisible(true);
+                lockBtn.setEnabled(false);
+            }
+            
+
+            doubleFlag = 0;
+
+        }
+
+    }
+
+    public void nextButtonClicked(){
+        enableLifeLines();
+        nextQuestionBtn.setVisible(false);
+        option1.setVisible(true);
+        option2.setVisible(true);
+        option3.setVisible(true);
+        option4.setVisible(true);
+        lockBtn.setVisible(true);
+        lockBtn.setEnabled(false);
+        // questionIndex++;
+        // System.out.println(questionIndex);
+        // System.out.println(questions[questionIndex][0]);
+        startGame();
+    }
+
+    public void swapButtonClicked(){
+        swapFlag = 1;
+        swapFlagUsed = 1;
+        swapBtn.setEnabled(false);  //TODO: uncomment this later
+        timer.cancel();
+        enableLifeLines();
+        startGame();
+    }
+
+    public void fiftyFiftyButtonClicked(){
+        disableLifeLines();
+        fiftyFiftyFlagUsed = 1;
+        int removedButton = 0;
+        Stack<Integer> checked = new Stack<Integer>();
+        int temp;
+        // System.out.println("fifty fifty pressed");
+        quitBtn.setEnabled(false);
+
+        while(removedButton < 2){
+            temp = (int)(Math.random() * 4);
+            // System.out.println(temp);
+
+            if(checked.contains(temp)){
+                continue;
+            }
+
+            checked.push(temp);
+
+            if(buttonList[temp].getText() == correctAnswer){
+                continue;
+            }else{
+                buttonList[temp].setVisible(false);
+                removedButton++;
+            }
+        }
+
+        fiftyFiftyBtn.setEnabled(false); //TODO: uncomment this later
+    }
+
+    public void doubleDipButtonClicked(){
+        disableLifeLines();
+        doubleFlag = 1;
+        doubleFlagUsed = 1;
+        quitBtn.setEnabled(false);
+        doubleDieBtn.setEnabled(false);
+    }
+
+    public void disableLifeLines(){
+        fiftyFiftyBtn.setEnabled(false);
+        doubleDieBtn.setEnabled(false);
+        swapBtn.setEnabled(false);
+    }
+
+    public void enableLifeLines(){
+        System.out.println("enable life lines. fifty = " + fiftyFiftyFlagUsed);
+        System.out.println("double = " + doubleFlag + "swapFlag = " + swapFlagUsed);
+        fiftyFiftyBtn.setEnabled(true);
+        doubleDieBtn.setEnabled(true);
+        swapBtn.setEnabled(true);
+
+        if(doubleFlagUsed == 1){
+            doubleDieBtn.setEnabled(false);
+        }
+
+        if(swapFlagUsed == 1){
+            swapBtn.setEnabled(false);
+        }
+
+        if(fiftyFiftyFlagUsed == 1){
+            fiftyFiftyBtn.setEnabled(false);
+        }
+    }
+
 
     public void actionPerformed(ActionEvent ae){
-        JButton currentBtn = (JButton)ae.getSource();
+        currentBtn = (JButton)ae.getSource();
         System.out.println("called0");
         
         if(currentBtn == quitBtn){
@@ -588,147 +798,20 @@ void startTimer(int timeLimit){
 
         if(currentBtn.getText() == optionA || currentBtn.getText() == optionB
             || currentBtn.getText() == optionC || currentBtn.getText() == optionD){
-            choosedBtn = currentBtn;
-
-            // System.out.println(option1.getBackground());
-            if(option1.getBackground() != Color.red){
-                option1.setBackground(Color.WHITE);
-                // option1.setForeground(Color.decode("#000000"));
-            }
-            if(option2.getBackground() != Color.red){
-                option2.setBackground(Color.WHITE);
-                // option2.setForeground(Color.decode("#000000"));
-            }
-            if(option3.getBackground() != Color.red){
-                option3.setBackground(Color.WHITE);
-                // option3.setForeground(Color.decode("#000000"));
-            }
-            if(option4.getBackground() != Color.red){
-                option4.setBackground(Color.WHITE);
-                // option4.setForeground(Color.decode("#000000"));
-            }
-            
-            // option2.setBackground(Color.WHITE);
-            // option3.setBackground(Color.WHITE);
-            // option4.setBackground(Color.WHITE);
-
-
-            option1.setEnabled(true);
-            option2.setEnabled(true);
-            option3.setEnabled(true);
-            option4.setEnabled(true);
-
-            lockBtn.setEnabled(true);
-
-            choosedBtn.setBackground(Color.GRAY);
-            // choosedBtn.setForeground(Color.decode("#FDF6EC"));
-            choosedBtn.setEnabled(false);
-
-            // lockLbl.setVisible(false);
-            lockBtn.setVisible(true);
+            optionButtonClicked();
         }else if(currentBtn.getText() == "Lock"){
-            choosedBtn.setEnabled(false);
-
-            if(doubleFlag == 0){
-                submitted = 1;
-                currentBtn.setVisible(false);
-                nextQuestionBtn.setVisible(true);
-                timer.cancel();
-
-                option1.setEnabled(false);
-                option2.setEnabled(false);
-                option3.setEnabled(false);
-                option4.setEnabled(false);
-            }
-
-            if(choosedBtn.getText() == correctAnswer){
-                doubleFlag = 0;
-                choosedBtn.setBackground(Color.GREEN);
-                moneyLevel[questionCount - 1].setBackground(Color.decode("#FFF323"));
-                moneyLevel[questionCount - 1].setForeground(Color.decode("#000000"));
-                quitBtn.setEnabled(true);
-                currentBtn.setVisible(false);
-                nextQuestionBtn.setVisible(true);
-                timer.cancel();
-                option1.setEnabled(false);
-                option2.setEnabled(false);
-                option3.setEnabled(false);
-                option4.setEnabled(false);
-            }else{
-                choosedBtn.setBackground(Color.RED);
-                choosedBtn.setEnabled(false);
-
-                // choosing the button with correct answer
-                if(doubleFlag == 0){
-
-                    for(int i = 0; i < 4; i++){
-                        if(buttonList[i].getText() == correctAnswer){
-                            buttonList[i].setBackground(Color.GREEN);
-                        }
-                    }
-                    wrongAnswerFlag = 1;
-                    gameOver();
-                }else{
-                    nextQuestionBtn.setVisible(false);
-                    playAgainBtn.setVisible(false);
-                    lockBtn.setVisible(true);
-                    lockBtn.setEnabled(false);
-                }
-                
-
-                doubleFlag = 0;
-
-            }
+            lockButtonClicked();
         
         }else if(currentBtn.getText() == "Next"){
-            nextQuestionBtn.setVisible(false);
-            option1.setVisible(true);
-            option2.setVisible(true);
-            option3.setVisible(true);
-            option4.setVisible(true);
-            lockBtn.setVisible(true);
-            lockBtn.setEnabled(false);
-            // questionIndex++;
-            // System.out.println(questionIndex);
-            // System.out.println(questions[questionIndex][0]);
-            startGame();
+            nextButtonClicked();
         }else if(currentBtn.getText() == "Swap"){
-            swapFlag = 1;
-            swapBtn.setEnabled(false);  //TODO: uncomment this later
-            timer.cancel();
-            startGame();
+            swapButtonClicked();
         }else if(currentBtn == playAgainBtn){
             playAgain();
         }else if(currentBtn == fiftyFiftyBtn){
-            int removedButton = 0;
-            Stack<Integer> checked = new Stack<Integer>();
-            int temp;
-            // System.out.println("fifty fifty pressed");
-            quitBtn.setEnabled(false);
-
-            while(removedButton < 2){
-                temp = (int)(Math.random() * 4);
-                // System.out.println(temp);
-
-                if(checked.contains(temp)){
-                    continue;
-                }
-
-                checked.push(temp);
-
-                if(buttonList[temp].getText() == correctAnswer){
-                    continue;
-                }else{
-                    buttonList[temp].setVisible(false);
-                    removedButton++;
-                }
-            }
-
-            fiftyFiftyBtn.setEnabled(false); //TODO: uncomment this later
+            fiftyFiftyButtonClicked();
         }else if(currentBtn == doubleDieBtn){
-            doubleFlag = 1;
-            quitBtn.setEnabled(false);
-            doubleDieBtn.setEnabled(false);
+            doubleDipButtonClicked();
         }
     }
 
@@ -774,10 +857,16 @@ void startTimer(int timeLimit){
             }
         }
 
+        option1.setVisible(true);
+        option2.setVisible(true);
+        option3.setVisible(true);
+        option4.setVisible(true);
+        
         option1.setEnabled(true);
         option2.setEnabled(true);
         option3.setEnabled(true);
         option4.setEnabled(true);
+
 
         lockBtn.setVisible(true);
         nextQuestionBtn.setVisible(false);
@@ -788,12 +877,14 @@ void startTimer(int timeLimit){
         swapBtn.setEnabled(true);
         doubleDieBtn.setEnabled(true);
         gameOverLbl.setVisible(false);
+        timerLabel.setVisible(true);
 
         // set all flag to false
         wrongAnswerFlag = 0;
         swapFlag = 0;
         quitFlag = 0;
         doubleFlag = 0;
+        fiftyFiftyFlagUsed = 0;
 
 
 
